@@ -6,4 +6,13 @@ jobs:
             - image: circleci/golang:1.15
         steps:
             - checkout
+            - setup_remote_docker:
+                - docker_layer_caching: true
             - run: make build
+            - deploy:
+                  command: |
+                      if [ "${CIRCLE_BRANCH}" == "master" ]; then
+                        docker build -t ${DOCKER_REPO} .
+                        docker login -u ${DOCKER_USER} -p ${DOCKER_PASS}
+                        docker push ${DOCKER_REPO}
+                      fi
