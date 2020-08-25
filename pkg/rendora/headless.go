@@ -235,6 +235,12 @@ func (c *headlessClient) getResponse(uri string) (*HeadlessResponse, error) {
 		c.rendora.metrics.Duration.Observe(elapsed)
 	}
 
+	status := responseReply.Response.Status
+
+	if status == 304 {
+		status = 200
+	}
+
 	responseHeaders := make(map[string]string)
 	err = json.Unmarshal(responseReply.Response.Headers, &responseHeaders)
 	if err != nil {
@@ -242,7 +248,7 @@ func (c *headlessClient) getResponse(uri string) (*HeadlessResponse, error) {
 	}
 	ret := &HeadlessResponse{
 		Content: domResponse.OuterHTML,
-		Status:  responseReply.Response.Status,
+		Status:  status,
 		Headers: responseHeaders,
 		Latency: elapsed,
 	}
