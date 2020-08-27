@@ -127,6 +127,8 @@ func (R *Rendora) getResponse(uri string) (*HeadlessResponse, error) {
 
 func (R *Rendora) getSSR(c *gin.Context) {
 
+	log.Println("Rendering SSR...")
+
 	resp, err := R.getResponse(c.Request.RequestURI)
 	if err != nil {
 		c.AbortWithStatus(http.StatusServiceUnavailable)

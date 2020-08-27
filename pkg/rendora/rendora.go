@@ -37,6 +37,11 @@ func (R *Rendora) getProxy(c *gin.Context) {
 }
 
 func (R *Rendora) middleware() gin.HandlerFunc {
+
+	sem := make(chan struct{}, R.c.Listen.Concurrency)
+	acquire := func() { sem <- struct{}{} }
+	release := func() { <-sem }
+
 	return func(c *gin.Context) {
 		if c.Request.Method != http.MethodGet {
 			R.getProxy(c)
@@ -49,6 +54,8 @@ func (R *Rendora) middleware() gin.HandlerFunc {
 		}
 
 		if R.isWhitelisted(c) {
+			acquire()
+			defer release()
 			R.getSSR(c)
 		} else {
 			R.getProxy(c)
@@ -76,7 +83,7 @@ func (R *Rendora) limit(max int) gin.HandlerFunc {
 
 func (R *Rendora) initProxyServer() *http.Server {
 	r := gin.New()
-	r.Use(R.limit(R.c.Listen.Concurrency), R.middleware())
+	r.Use(R.middleware())
 	srv := &http.Server{
 		Addr:         fmt.Sprintf("%s:%d", R.c.Listen.Address, R.c.Listen.Port),
 		Handler:      r,
