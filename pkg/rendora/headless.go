@@ -133,6 +133,10 @@ func (R *Rendora) newHeadlessClient() error {
 		return err
 	}
 
+	if err = ret.C.Page.SetBypassCSP(ctx, page.NewSetBypassCSPArgs(true)); err != nil {
+		return err
+	}
+
 	err = ret.C.Network.Enable(ctx, nil)
 	if err != nil {
 		return err
