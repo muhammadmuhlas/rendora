@@ -24,7 +24,7 @@ import (
 	"github.com/tdewolff/minify/v2/html"
 )
 
-var json = jsoniter.ConfigCompatibleWithStandardLibrary
+var json = jsoniter.ConfigFastest
 
 type reqBody struct {
 	URL string `json:"url"`
