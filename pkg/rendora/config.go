@@ -30,9 +30,10 @@ type rendoraConfig struct {
 	HeadlessMode string `mapstructure:"headlessMode" valid:"in(default|internal|external)"`
 	Debug        bool   `mapstructure:"debug"`
 	LogsMode     string `valid:"in(ERROR|INFO|DEBUG|NONE)"`
-	Listen       struct {
-		Address string `valid:"ip"`
-		Port    uint16 `valid:"range(1|65535)"`
+	Listen struct {
+		Address      string `valid:"ip"`
+		Port         uint16 `valid:"range(1|65535)"`
+		WriteTimeout int    `valid:"range(15|60)"`
 	}
 	Backend struct {
 		URL string `valid:"required,requrl"`
@@ -144,6 +145,7 @@ func (R *Rendora) initConfig() error {
 	viper.SetDefault("server.enable", "false")
 	viper.SetDefault("server.listen.address", "0.0.0.0")
 	viper.SetDefault("server.listen.port", "9242")
+	viper.SetDefault("server.listen.writeTimeout", "60")
 	viper.SetDefault("server.auth.enable", false)
 	viper.SetDefault("server.auth.name", "X-Auth-Rendora")
 	viper.SetDefault("server.auth.value", "")

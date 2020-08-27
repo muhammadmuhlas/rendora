@@ -67,7 +67,7 @@ func (R *Rendora) initProxyServer() *http.Server {
 		Addr:         fmt.Sprintf("%s:%d", R.c.Listen.Address, R.c.Listen.Port),
 		Handler:      r,
 		ReadTimeout:  5 * time.Second,
-		WriteTimeout: 10 * time.Second,
+		WriteTimeout: time.Duration(R.c.Listen.WriteTimeout) * time.Second,
 	}
 
 	return srv
