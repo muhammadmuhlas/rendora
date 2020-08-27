@@ -48,7 +48,7 @@ type rendoraConfig struct {
 		URL         string   `valid:"requrl"`
 		AuthToken   string   `mapstructure:"authToken"`
 		BlockedURLs []string `mapstructure:"blockedURLs"`
-		Timeout     uint16   `valid:"range(5|30)"`
+		Timeout     uint16   `valid:"range(5|60)"`
 		Internal    struct {
 			URL string `valid:"url"`
 		}
