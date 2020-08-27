@@ -142,6 +142,11 @@ func (R *Rendora) newHeadlessClient() error {
 		"X-Rendora-Type": "RENDER",
 	}
 
+	err = ret.C.CSS.Disable(ctx)
+	if err != nil {
+		return err
+	}
+
 	headersStr, err := json.Marshal(headers)
 	if err != nil {
 		return err
