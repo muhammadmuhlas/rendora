@@ -28,8 +28,8 @@ import (
 	"github.com/mafredri/cdp/protocol/network"
 	"github.com/mafredri/cdp/protocol/page"
 	"github.com/mafredri/cdp/rpcc"
-	"regexp"
 	"strings"
+	"regexp"
 )
 
 var defaultBlockedURLs []string
@@ -220,13 +220,13 @@ func (c *headlessClient) getResponse(uri string) (*HeadlessResponse, error) {
 		log.Println("Waiting DOM for", time.Duration(c.rendora.c.Headless.WaitAfterDOMLoad).String(), "on", uri)
 	}
 
+	if _, err = domContent.Recv(); err != nil {
+		return nil, err
+	}
+
 	waitUntil := c.rendora.c.Headless.WaitAfterDOMLoad
 	if waitUntil > 0 {
 		time.Sleep(time.Duration(waitUntil) * time.Millisecond)
-	}
-
-	if _, err = domContent.Recv(); err != nil {
-		return nil, err
 	}
 
 	doc, err := c.C.DOM.GetDocument(ctx, nil)
@@ -247,12 +247,6 @@ func (c *headlessClient) getResponse(uri string) (*HeadlessResponse, error) {
 	}
 	log.Println("Get HTML markup took ", time.Since(ts).String())
 
-
-	err = c.rendora.h.C.Page.Close(ctx)
-	if err != nil {
-		log.Println(err)
-	}
-
 	var pattern []string
 
 	removeStyle := c.rendora.c.Output.Remove.Style
@@ -262,7 +256,7 @@ func (c *headlessClient) getResponse(uri string) (*HeadlessResponse, error) {
 
 	removeScript := c.rendora.c.Output.Remove.Script
 	if removeScript {
-		pattern = append(pattern, "\\<script[\\S\\s]+?\\</script\\>")
+		pattern = append(pattern, "\\<script[\\S\\s]+?\\</script\\>|\\<noscript[\\S\\s]+?\\</noscript\\>")
 	}
 
 	tr := time.Now()
