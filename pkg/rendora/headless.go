@@ -238,6 +238,12 @@ func (c *headlessClient) getResponse(uri string) (*HeadlessResponse, error) {
 	}
 	log.Println("Get HTML markup took ", time.Since(ts).String())
 
+
+	err = c.rendora.h.C.Page.Close(ctx)
+	if err != nil {
+		log.Println(err)
+	}
+
 	var pattern []string
 
 	removeStyle := c.rendora.c.Output.Remove.Style
