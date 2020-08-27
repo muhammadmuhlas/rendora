@@ -29,6 +29,8 @@ import (
 	"github.com/mafredri/cdp/protocol/network"
 	"github.com/mafredri/cdp/protocol/page"
 	"github.com/mafredri/cdp/rpcc"
+	"regexp"
+	"strings"
 )
 
 var defaultBlockedURLs []string
@@ -184,6 +186,17 @@ func (c *headlessClient) getResponse(uri string) (*HeadlessResponse, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(c.rendora.c.Headless.Timeout)*time.Second)
 	defer cancel()
 
+	exec := time.Now()
+	if c.rendora.c.LogsMode != "NONE" {
+		log.Println("Processing", uri)
+	}
+
+	domContent, err := c.C.Page.DOMContentEventFired(ctx)
+	if err != nil {
+		return nil, err
+	}
+	defer domContent.Close()
+
 	timeStart := time.Now()
 	navArgs := page.NewNavigateArgs(uri)
 	networkResponse, err := c.C.Network.ResponseReceived(ctx)
@@ -202,11 +215,9 @@ func (c *headlessClient) getResponse(uri string) (*HeadlessResponse, error) {
 		return nil, err
 	}
 
-	domContent, err := c.C.Page.DOMContentEventFired(ctx)
-	if err != nil {
-		return nil, err
+	if c.rendora.c.LogsMode != "NONE" {
+		log.Println("Waiting DOM for", time.Duration(c.rendora.c.Headless.WaitAfterDOMLoad).String(), "on", uri)
 	}
-	defer domContent.Close()
 
 	waitUntil := c.rendora.c.Headless.WaitAfterDOMLoad
 	if waitUntil > 0 {
@@ -222,12 +233,35 @@ func (c *headlessClient) getResponse(uri string) (*HeadlessResponse, error) {
 		return nil, err
 	}
 
+	if c.rendora.c.LogsMode != "NONE" {
+		log.Println("Get HTML", uri)
+	}
+
+	ts := time.Now()
 	domResponse, err := c.C.DOM.GetOuterHTML(ctx, &dom.GetOuterHTMLArgs{
 		NodeID: &doc.Root.NodeID,
 	})
 	if err != nil {
 		return nil, err
 	}
+	log.Println("Get HTML markup took ", time.Since(ts).String())
+
+	var pattern []string
+
+	removeStyle := c.rendora.c.Output.Remove.Style
+	if removeStyle {
+		pattern = append(pattern, "\\<style[\\S\\s]+?\\</style\\>")
+	}
+
+	removeScript := c.rendora.c.Output.Remove.Script
+	if removeScript {
+		pattern = append(pattern, "\\<script[\\S\\s]+?\\</script\\>")
+	}
+
+	tr := time.Now()
+	re, _ := regexp.Compile(strings.Join(pattern, "|"))
+	domResponse.OuterHTML = re.ReplaceAllString(domResponse.OuterHTML, "")
+	log.Println("Remove style and or script took", time.Since(tr).String())
 
 	elapsed := float64(time.Since(timeStart)) / float64(time.Duration(1*time.Millisecond))
 
@@ -251,6 +285,10 @@ func (c *headlessClient) getResponse(uri string) (*HeadlessResponse, error) {
 		Status:  status,
 		Headers: responseHeaders,
 		Latency: elapsed,
+	}
+
+	if c.rendora.c.LogsMode != "NONE" {
+		log.Println("Processed took", time.Since(exec).Milliseconds(), "ms for", uri)
 	}
 
 	return ret, nil

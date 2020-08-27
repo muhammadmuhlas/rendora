@@ -53,7 +53,7 @@ type rendoraConfig struct {
 		}
 		CacheDisabled bool `mapstructure:"cacheDisabled"`
 
-		WaitAfterDOMLoad uint16 `mapstructure:"waitAfterDOMLoad" valid:"range(0|5000)"`
+		WaitAfterDOMLoad uint16 `mapstructure:"waitAfterDOMLoad" valid:"range(0|10000)"`
 	} `mapstructure:"headless"`
 
 	Cache struct {
@@ -69,6 +69,10 @@ type rendoraConfig struct {
 
 	Output struct {
 		Minify bool
+		Remove struct{
+			Style bool
+			Script bool
+		} `mapstructure:"remove"`
 	} `mapstructure:"output"`
 
 	Filters struct {
@@ -128,6 +132,8 @@ func (R *Rendora) initConfig() error {
 	viper.SetDefault("cache.redis.password", "")
 	viper.SetDefault("cache.redis.db", 0)
 	viper.SetDefault("output.minify", false)
+	viper.SetDefault("output.remove.style", false)
+	viper.SetDefault("output.remove.script", false)
 	viper.SetDefault("headless.mode", "default")
 	viper.SetDefault("headless.waitAfterDOMLoad", 0)
 	viper.SetDefault("headless.timeout", 15)
