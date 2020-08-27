@@ -22,6 +22,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"golang.org/x/sync/errgroup"
+	"log"
 )
 
 func (R *Rendora) getProxy(c *gin.Context) {
@@ -59,10 +60,23 @@ func (R *Rendora) middleware() gin.HandlerFunc {
 	}
 }
 
+func (R *Rendora) limit(max int) gin.HandlerFunc {
+	if max <= 0 {
+		log.Panic("max must be more than 0")
+	}
+	sem := make(chan struct{}, max)
+	acquire := func() { sem <- struct{}{} }
+	release := func() { <-sem }
+	return func(c *gin.Context) {
+		acquire() // before request
+		defer release() // after request
+		c.Next()
+	}
+}
+
 func (R *Rendora) initProxyServer() *http.Server {
 	r := gin.New()
-	r.Use(R.middleware())
-
+	r.Use(R.limit(R.c.Listen.Concurrency), R.middleware())
 	srv := &http.Server{
 		Addr:         fmt.Sprintf("%s:%d", R.c.Listen.Address, R.c.Listen.Port),
 		Handler:      r,

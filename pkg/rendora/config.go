@@ -34,6 +34,7 @@ type rendoraConfig struct {
 		Address      string `valid:"ip"`
 		Port         uint16 `valid:"range(1|65535)"`
 		WriteTimeout int    `valid:"range(15|60)"`
+		Concurrency   int    `valid:"range(1|100)"`
 	}
 	Backend struct {
 		URL string `valid:"required,requrl"`
@@ -127,6 +128,8 @@ func (R *Rendora) initConfig() error {
 	viper.SetDefault("logsMode", "NONE")
 	viper.SetDefault("listen.port", 3001)
 	viper.SetDefault("listen.address", "0.0.0.0")
+	viper.SetDefault("listen.writeTimeout", "60")
+	viper.SetDefault("listen.concurrency", "5")
 	viper.SetDefault("cache.type", "local")
 	viper.SetDefault("cache.timeout", 60*60)
 	viper.SetDefault("cache.redis.keyprefix", "__:::rendora:")
@@ -145,7 +148,6 @@ func (R *Rendora) initConfig() error {
 	viper.SetDefault("server.enable", "false")
 	viper.SetDefault("server.listen.address", "0.0.0.0")
 	viper.SetDefault("server.listen.port", "9242")
-	viper.SetDefault("server.listen.writeTimeout", "60")
 	viper.SetDefault("server.auth.enable", false)
 	viper.SetDefault("server.auth.name", "X-Auth-Rendora")
 	viper.SetDefault("server.auth.value", "")
