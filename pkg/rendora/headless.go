@@ -15,7 +15,6 @@ package rendora
 
 import (
 	"context"
-	"errors"
 	"log"
 	"net"
 	"net/http"
@@ -70,6 +69,7 @@ func resolveURLHostname(arg string) (string, error) {
 
 func checkHeadless(arg string, logsMode string) error {
 	doCheck := func() error {
+		log.Println("Checking the headless Chrome instance...")
 		resp, err := http.Get(arg + "/json/version")
 		if err != nil {
 			return err
@@ -78,22 +78,14 @@ func checkHeadless(arg string, logsMode string) error {
 		return nil
 	}
 
-	for i := 0; i < 4; i++ {
+	for {
 		err := doCheck()
 		if err == nil {
 			return nil
 		}
-		if logsMode != "NONE" {
-			log.Println("Cannot connect to the headless Chrome instance, trying again after 2 seconds...")
-		}
+		log.Println("Cannot connect to the headless Chrome instance, trying again after 2 seconds...")
 		time.Sleep(2 * time.Second)
 	}
-	err := doCheck()
-	if err == nil {
-		return nil
-	}
-	return errors.New("Cannot connect to the headless Chrome instance, make sure it is running")
-
 }
 
 //NewHeadlessClient creates HeadlessClient

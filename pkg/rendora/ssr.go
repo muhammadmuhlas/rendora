@@ -101,8 +101,14 @@ func (R *Rendora) getResponse(uri string) (*HeadlessResponse, error) {
 		return resp, nil
 	}
 
+	err = checkHeadless(R.c.Headless.Internal.URL, R.c.LogsMode)
+	if err != nil {
+		err = R.newHeadlessClient()
+	}
+
 	dt, err := R.getHeadless(uri)
 	if err != nil {
+		panic(err.Error())
 		return nil, err
 	}
 	if R.c.Output.Minify {
