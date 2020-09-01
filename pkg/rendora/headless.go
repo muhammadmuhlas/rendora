@@ -259,10 +259,12 @@ func (c *headlessClient) getResponse(uri string) (*HeadlessResponse, error) {
 		pattern = append(pattern, "\\<script[\\S\\s]+?\\</script\\>|\\<noscript[\\S\\s]+?\\</noscript\\>")
 	}
 
-	tr := time.Now()
-	re, _ := regexp.Compile(strings.Join(pattern, "|"))
-	domResponse.OuterHTML = re.ReplaceAllString(domResponse.OuterHTML, "")
-	log.Println("Remove style and or script took", time.Since(tr).String())
+	if len(pattern) > 0 {
+		tr := time.Now()
+		re, _ := regexp.Compile(strings.Join(pattern, "|"))
+		domResponse.OuterHTML = re.ReplaceAllString(domResponse.OuterHTML, "")
+		log.Println("Remove style and or script took", time.Since(tr).String())
+	}
 
 	elapsed := float64(time.Since(timeStart)) / float64(time.Duration(1*time.Millisecond))
 
