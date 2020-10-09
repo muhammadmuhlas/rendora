@@ -8,7 +8,7 @@ require (
 	github.com/go-playground/validator/v10 v10.3.0 // indirect
 	github.com/go-redis/redis v6.15.9+incompatible
 	github.com/json-iterator/go v1.1.10
-	github.com/mafredri/cdp v0.29.2
+	github.com/mafredri/cdp v0.30.0
 	github.com/magiconair/properties v1.8.2 // indirect
 	github.com/mitchellh/mapstructure v1.3.3 // indirect
 	github.com/patrickmn/go-cache v2.1.0+incompatible

@@ -235,6 +235,7 @@ github.com/lightstep/lightstep-tracer-go v0.18.1/go.mod h1:jlF1pusYV4pidLvZ+XD0U
 github.com/lyft/protoc-gen-validate v0.0.13/go.mod h1:XbGvPuh87YZc5TdIa2/I4pLk0QoUACkjt2znoq26NVQ=
 github.com/mafredri/cdp v0.29.2 h1:8lZnyx/A1yLmhkqMK3hJP0JgIjllF8edRsWUtMzu1cc=
 github.com/mafredri/cdp v0.29.2/go.mod h1:71D84qPmWUvBWYj24Zp+U69mrUof4o8qL2X1fQJ/lHc=
+github.com/mafredri/cdp v0.30.0/go.mod h1:71D84qPmWUvBWYj24Zp+U69mrUof4o8qL2X1fQJ/lHc=
 github.com/mafredri/go-lint v0.0.0-20180911205320-920981dfc79e/go.mod h1:k/zdyxI3q6dup24o8xpYjJKTCf2F7rfxLp6w/efTiWs=
 github.com/magiconair/properties v1.8.0 h1:LLgXmsheXeRoUOBOjtwPQCWIYqM/LU1ayDtDePerRcY=
 github.com/magiconair/properties v1.8.0/go.mod h1:PppfXfuXeibc/6YijjN8zIbojt8czPbwD3XqdrwzmxQ=
