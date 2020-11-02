@@ -1,4 +1,3 @@
-
 # Rendora
 
 <p align="center">
@@ -10,6 +9,7 @@
 [![GoDoc](https://godoc.org/github.com/rendora/rendora?status.svg)](https://godoc.org/github.com/rendora/rendora)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/rendora/rendora/blob/master/LICENSE)
 [![Join the chat at https://discord.gg/6yyErk8](https://img.shields.io/badge/chat-on%20discord-7289da.svg)](https://discord.gg/6yyErk8)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fmuhammadmuhlas%2Frendora.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fmuhammadmuhlas%2Frendora?ref=badge_shield)
 
 Rendora is a dynamic renderer to provide zero-configuration server-side rendering mainly to web crawlers in order to effortlessly improve SEO for websites developed in modern Javascript frameworks such as React.js, Vue.js, Angular.js, etc... Rendora works totally independently of your frontend and backend stacks
 
@@ -189,3 +189,7 @@ Many thanks to [@mafredri](https://github.com/mafredri) for his effort to create
 Follow rendora news and releases on [Twitter](https://twitter.com/_rendora)
 
 George Badawi - 2018
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fmuhammadmuhlas%2Frendora.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fmuhammadmuhlas%2Frendora?ref=badge_large)
