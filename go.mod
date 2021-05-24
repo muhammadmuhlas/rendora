@@ -4,8 +4,7 @@ go 1.15
 
 require (
 	github.com/asaskevich/govalidator v0.0.0-20200819183940-29e1ff8eb0bb
-	github.com/gin-gonic/gin v1.6.3
-	github.com/go-playground/validator/v10 v10.3.0 // indirect
+	github.com/gin-gonic/gin v1.7.2
 	github.com/go-redis/redis v6.15.9+incompatible
 	github.com/json-iterator/go v1.1.10
 	github.com/mafredri/cdp v0.29.2
